@@ -111,19 +111,21 @@ public class Copybook extends Group implements Settings
      * @return a new application data element with the given data
      * @throws IOException
      */
+    @Deprecated
     public Record parseData(byte[] data) throws IOException
     {
-        return new Record(getName(), (GroupData) parse(data));
+        throw new UnsupportedOperationException("Deprecated");
+        //return new Record(getName(), (GroupData) parse(data));
     }
     
     public List<Record> parseData(InputStream stream) throws IOException
     {
-        ByteBuffer buffer = new ByteBuffer(stream);        
+        //ByteBuffer buffer = new ByteBuffer(stream);        
         List<Record> list = new ArrayList<Record>();
         
-        while (buffer.hasNext()) {
-            list.add(new Record(getName(), (GroupData) parse(buffer.getNext())));
-        }
+        //while (buffer.hasNext()) {
+            list.add(new Record(getName(), (GroupData) parse(stream)));
+        //}
         
         return list;
     }

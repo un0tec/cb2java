@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import net.sf.cb2java.Value;
@@ -103,9 +105,10 @@ public class SignedSeparate extends Numeric
         return 0;
     }
     
-    public Data parse(byte[] bytes)
+    @Override
+    public Data parse(InputStream input) throws IOException 
     {
-        String s = getString(bytes);
+        String s = getString(readNextBytesFromStream(input, (1 +this.getLength())));
         
         char sign;
         
@@ -121,7 +124,7 @@ public class SignedSeparate extends Numeric
         if (sign != '+' && sign != '-') throw new IllegalArgumentException(getName() + " is sign separate "
             + (getSignPosition() == LEADING ? "leading" : "trailing") + " but no sign was found on value " + s);
         
-        if (sign == '+') s = s.substring(1);
+        if (sign == '+') s = s.replace("+", "");
 
         BigInteger big = new BigInteger(s);
         Data data = create();
@@ -141,6 +144,7 @@ public class SignedSeparate extends Numeric
         }
     }
     
+    @Override
     public byte[] toBytes(Object data)
     {
         String s;
@@ -180,6 +184,7 @@ public class SignedSeparate extends Numeric
         return output;
     }
 
+    @Override
     public int digits()
     {
         return getLength() - 1;

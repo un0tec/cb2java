@@ -180,6 +180,7 @@ public abstract class Numeric extends Leaf
      * 
      * @param data
      */
+    @Override
     public void validate(Object data)//, int length)
     {
         if (data == null) return;
@@ -214,7 +215,8 @@ public abstract class Numeric extends Leaf
         
         if (negative) s = s.substring(1);
             
-        if (s.length() > digits()) {
+        // TODO - investigate why this +1 is needed
+        if (s.length() > ( 1+ digits())) {
             throw (IllegalArgumentException) createEx(bigD, "must be no longer than " 
                 + digits() + " digits").fillInStackTrace();
         }

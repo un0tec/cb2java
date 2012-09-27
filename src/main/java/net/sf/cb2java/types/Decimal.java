@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import net.sf.cb2java.Value;
@@ -218,9 +220,9 @@ public class Decimal extends Numeric
         throw new IllegalArgumentException("invalid char: " + overpunched);
     }
     
-    public Data parse(byte[] bytes)
-    {
-        String input = getString(bytes).trim();
+    @Override
+    public Data parse(InputStream inputStream) throws IOException {
+        String input = getString(readNextBytesFromStream(inputStream, this.getLength())).trim();
         String s;
         
         if (input.length() < 1) {
@@ -296,4 +298,5 @@ public class Decimal extends Numeric
     {
         return getLength();
     }
+
 }

@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -99,7 +101,8 @@ public class Group extends Element
         return new GroupData(this, dataChildren);
     }
     
-    public Data parse(final byte[] bytes)
+    @Override
+    public Data parse(InputStream input) throws IOException
     {
         ArrayList dataChildren = new ArrayList();
         
@@ -111,7 +114,7 @@ public class Group extends Element
 //                final int p = pos;
                 final int end = pos + element.getLength();
     //            System.out.println(pos + " " + end + " " + input.length());
-                dataChildren.add(element.parse(sub(bytes, pos, end)));
+                dataChildren.add(element.parse(input));
 //                dataChildren.add(new DataHolder() {
 //                    public Data evaluate()
 //                    {
@@ -126,6 +129,7 @@ public class Group extends Element
         return new GroupData(this, dataChildren);
     }
 
+    @Deprecated
     private byte[] sub(byte[] in, int start, int end)
     {
         byte[] out = new byte[end - start];

@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import net.sf.cb2java.Value;
 import net.sf.cb2java.copybook.floating.Conversion;
@@ -85,11 +87,12 @@ public class Floating extends Leaf
         return new FloatingData(this);
     }
 
-    public Data parse(byte[] input)
+    @Override
+    public Data parse(InputStream input) throws IOException 
     {
         FloatingData data = (FloatingData) create();
         
-        data.setValue(conversion.fromBytes(input, precision));
+        data.setValue(conversion.fromBytes(readNextBytesFromStream(input,this.getLength()) , precision));
         
         return data;
     }
@@ -108,4 +111,5 @@ public class Floating extends Leaf
 //        System.out.println("float:" + data);
         return conversion.toBytes((BigDecimal) data, precision);
     }
+
 }

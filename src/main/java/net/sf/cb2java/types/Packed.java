@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import net.sf.cb2java.data.Data;
@@ -92,14 +94,20 @@ public class Packed extends Numeric
         return digits;
     }
 
-    public Data parse(byte[] input)
-    {
+
+//    public Data parse(byte[] input)
+  //  {
+
+    @Override
+    public Data parse(InputStream inputStream) throws IOException {
+   
         // for (int i = 0; i < input.length; i++) {
         // System.out.print(input[i]);
         // System.out.print(' ');
         // }
 
         // System.out.println();
+        byte[] input = readNextBytesFromStream(inputStream, this.getLength());
 
         byte lastByte = input[input.length - 1];
         boolean negative = signed() && (lastByte & 0x0F) == 0x0D;

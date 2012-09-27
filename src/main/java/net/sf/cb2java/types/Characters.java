@@ -18,6 +18,8 @@
  */
 package net.sf.cb2java.types;
 
+import java.io.IOException;
+import java.io.InputStream;
 import net.sf.cb2java.Value;
 import net.sf.cb2java.data.CharData;
 import net.sf.cb2java.data.Data;
@@ -39,25 +41,26 @@ public class Characters extends Leaf
         this.length = length;
     }
     
+    @Override
     public int getLength()
     {
         return length;
     }
 
+    @Override
     public Data create()
     {
         return new CharData(this);
     }
     
-    public Data parse(byte[] bytes)
-    {
+    @Override
+    public Data parse(InputStream input) throws IOException {
         CharData data = (CharData) create();
-        
-        data.setValue(getString(bytes));
-        
+        data.setValue(getString(readNextBytesFromStream(input, this.getLength())));
         return data;
     }
     
+    @Override
     public void validate(Object data)
     {
         if (data == null) return;
@@ -67,6 +70,7 @@ public class Characters extends Leaf
         if (s.length() > getLength()) throw new IllegalArgumentException("string value of " + data + " is longer than " + length);
     }
 
+    @Override
     public byte[] toBytes(Object data)
     {
         byte[] output = data == null ? new byte[0] : getBytes((String) data);
@@ -79,4 +83,5 @@ public class Characters extends Leaf
     {
         return super.getValue() == null ? getSettings().getValues().SPACES : super.getValue();
     }
+
 }

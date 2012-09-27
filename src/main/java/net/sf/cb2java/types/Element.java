@@ -19,6 +19,7 @@
 package net.sf.cb2java.types;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -101,7 +102,16 @@ public abstract class Element
      * @param input the input data
      * @return a new empty Data instance from the data supplied
      */
-    public abstract Data parse(byte[] input);
+    public abstract Data parse(InputStream input) throws IOException;
+    //public abstract Data parse(byte[] input);
+    
+    protected byte[] readNextBytesFromStream(InputStream inputStream, int size) throws IOException {
+        byte[] bytes = new byte[size];
+        int bytesRead = inputStream.read(bytes);
+        if (bytesRead < size)
+            throw new IOException(String.format("Only read %d bytes from stream but %d are required", bytesRead, size));
+        return bytes;
+    }
     
     /**
      * validates the data based on this element definition
